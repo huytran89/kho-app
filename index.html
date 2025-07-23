@@ -6,9 +6,44 @@
 </head>
 <body>
   <h1>📦 Kho Ứng Dụng Cho AndroidBox</h1>
-  <ul>
-    <li><a href="00.Tat_ca_APP_1.0.apk" download>📥 Tải tất cả APP (v1.0)</a></li>
-    <li><a href="01.Smarttube_beta.apk" download>📺 SmartTube Beta</a></li>
+  <ul id="app-list">
+    <li>Đang tải danh sách ứng dụng...</li>
   </ul>
+
+  <script>
+    async function fetchAPKList() {
+      const repo = "huytran89/kho-app";
+      const apiUrl = `https://api.github.com/repos/${repo}/contents/`;
+
+      try {
+        const response = await fetch(apiUrl);
+        const files = await response.json();
+
+        const apkFiles = files.filter(file => file.name.endsWith(".apk"));
+        const list = document.getElementById("app-list");
+        list.innerHTML = "";
+
+        apkFiles.forEach(file => {
+          const item = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = file.download_url;
+          link.textContent = "📥 " + file.name;
+          link.download = file.name;
+          item.appendChild(link);
+          list.appendChild(item);
+        });
+
+        if (apkFiles.length === 0) {
+          list.innerHTML = "<li>Không có file .apk nào trong kho.</li>";
+        }
+
+      } catch (error) {
+        document.getElementById("app-list").innerHTML = "<li>Lỗi tải danh sách ứng dụng.</li>";
+        console.error(error);
+      }
+    }
+
+    fetchAPKList();
+  </script>
 </body>
 </html>
