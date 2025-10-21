@@ -1,0 +1,5 @@
+# Auto-generated .gitignore
+__pycache__/
+*.py
+*.bat
+*.tmb
